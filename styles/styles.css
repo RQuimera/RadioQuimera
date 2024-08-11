@@ -1,0 +1,116 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+body {
+    color: #fff;
+    background-color: #252525;
+    background-image: url("data:image/svg+xml,%3Csvg width='20' height='20' viewBox='0 0 20 20' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.16' fill-rule='evenodd'%3E%3Ccircle cx='3' cy='3' r='3'/%3E%3Ccircle cx='13' cy='13' r='3'/%3E%3C/g%3E%3C/svg%3E");
+    font-size: 16px;
+    font-family: "Quicksand", sans-serif;
+}
+a {
+    color: #fff;
+    text-decoration: none;
+}
+ul {
+    list-style: none;
+    /*quitar estilos de las listas */
+}
+hr {
+    margin: 10px 0;
+}
+.active{
+    color: rgb(252, 116, 116);
+    border-bottom: 2px solid rgb(252, 116, 116);
+}
+.nav-brand {
+    width: 150px;
+}
+.menu-btn {
+    position: absolute;
+    cursor: pointer;
+    top: 15px;
+    right: 30px;
+    display: none;
+    z-index: 2;
+    font-size: 1.5rem;
+}
+.container {
+    /*para centrar todo el contenido*/
+    width: 90%;
+    margin: auto;
+}
+.nav-main {
+    font-size: 17px;
+    display: flex;
+    /*para organizar los elementos uno al lado del otro (logo, primera lista ul, segunda lista ul)*/
+    justify-content: space-between;
+    /*para que usen todo el ancho disponible */
+    align-items: center;
+    height: 60px;
+    /*ajustar altura de la pagina */
+    padding: 20px 0;
+}
+.nav-main ul {
+    display: flex;
+    /*para poner los elementos de la lista uno al lado del otro */
+}
+.nav-main ul li {
+    padding: 10px;
+    /*division entre elementos*/
+}
+.nav-main ul li a {
+    /* distancia del underline a la palabra al hacer hover*/
+    padding: 2px;
+}
+.nav-main ul li a:not(.active):hover  {
+    /*cuando se posiciona se muestra el underline*/
+    border-bottom: 2px solid #fff;
+}
+.nav-main ul.nav-menu {
+    /*para alinear los elementos de la lista junto al logo */
+    flex: 1;
+    margin-left: 20px;
+}
+.search-box{
+    position: relative;
+    padding-left: 0;
+    opacity: 0.4;
+}
+.search-box:focus{
+    opacity: 0.9;
+}
+@media (max-width: 700px) {
+    .menu-btn {
+        display: block;
+    }
+    .nav-main ul.nav-menu {
+        display: block;
+        position: absolute;
+        /*para que este encima de todo*/
+        top: 0;
+        right: 0;
+        background: #2f3640;
+        height: 100%;
+        padding: 30px;
+        opacity: .9;
+        transform: translateX(300px);
+        /*transform: translateX(-20px); /*para que este del todo a la izquierda*/
+        transition: transform .5s ease-in-out;
+    }
+    .nav-main ul.nav-menu.show {
+        transform: translateX(0px);
+    }
+    .nav-main ul.nav-menu li {
+        padding: 10px;
+        font-size: 14px;
+    }
+    .nav-main ul.lupa {
+        margin-right: 50px;
+    }
+    .search-box{
+        display: none;
+    }
+}
