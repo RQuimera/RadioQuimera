@@ -4,14 +4,16 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link class="logo" rel="shortcut icon" href="./img/ico_animals.ico" type="image/x-icon" />
+  <link rel="shortcut icon" href="./assets/img/ico_animals.ico" type="image/x-icon" />
   <title>Radio Quimera</title>
-  <!--Font Awesome-->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" />
+  <!--Font Awesome
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" />  -->
+  <script src="https://kit.fontawesome.com/e1abd97cf0.js" crossorigin="anonymous"></script>
   <!--Font Quicksand-->
   <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300..700&display=swap" rel="stylesheet" />
   <!--Custom CSS-->
-  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="./styles/styles.css" />
+  <link rel="stylesheet" href="./styles/index.css" />
 </head>
 
 <body>
@@ -21,115 +23,109 @@
 
   <div class="container">
     <nav class="nav-main">
-      <img src="./img/letras.png" alt="logo" class="nav-brand" />
+      <a href="index.html"><img src="./assets/img/letras.png" alt="logo" class="nav-brand" /></a>
       <ul class="nav-menu">
         <li>
-          <a href="#"><b>Inicio</b></a>
+          <a class="active" href="index.html"><b>Inicio</b></a>
         </li>
         <li>
-          <a href="#"><b>Capitulos</b></a>
+          <a href="./capitulos.html"><b>Capitulos</b></a>
         </li>
         <li>
-          <a href="#"><b>Donde escucharnos</b></a>
+          <a href="./escuchanos.html"><b>Donde escucharnos</b></a>
         </li>
         <li>
-          <a href="#"><b>Conocenos</b></a>
+          <a href="./conocenos.html"><b>Conocenos</b></a>
         </li>
-        <!--
-                <li>
-                    <a href="">quanto algo</a>
-                </li>
-                <li>
-                    <a href="">start</a>
-                </li>
-                <li>
-                    <a href="">mas</a>
-                </li> 
-                -->
       </ul>
 
-      <ul class="nav-menu-right">
+      <ul class="lupa">
+        <li>
+          <input type="text" id="buscar" name="buscar" value="" placeholder="" class="search-box">
+        </li>
         <li>
           <a href="">
             <i class="fas fa-search"></i>
-            <!--la clase trae desde fontaswesome el icono-->
           </a>
         </li>
       </ul>
     </nav>
 
-    <!--linea decoracion-->
+
     <hr />
 
-    <!--imagen de la noticia (showcase)-->
-    <header class="showcase">
-      <div class="show2">
+    <!--Banner-->
+    <header class="banner">
+      <div class="caja-banner">
         <h1>Bienvenido a Radio Quimera</h1>
         <!--Lorem30 para generar este texto-->
-        <div class="prueba">
-          <b>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Alias
-            totam voluptas expedita facilis quo nostrum quam a excepturi
-            cumque id vel perferendis reiciendis, voluptatibus sit inventore
-            saepe nobis numquam dolorem.</b>
+        <div>
+          <b>somos un grupo de amigos que un día decidieron reunirse a hablar de temas que nos gustaban, y empezamos a
+            grabarlos por si alguien ahí afuera quisiera escucharnos (no sabemos porque nos escucharias, pero gracias
+            por hacerlo)</b>
         </div>
-        <a href="#" class="btn">Ver mas <i class="fas fa-angle-double-right"></i></a>
+        <a href="escuchanos.html" class="btn">Escuchanos <i class="fas fa-angle-double-right"></i></a>
       </div>
     </header>
 
     <hr />
     <h1>Capitulos</h1>
 
-    <!--News card-->
-    <div class="news-cards">
+    <!--Capitulos-->
+    <div class="capitulos">
       <div>
-        <img src="https://i.blogs.es/04ac6a/2560_3000/1366_2000.jpeg" alt="News 1" />
-        <h3>Capt 1: Dragon ball - El Gokun Chiquito.</h3>
+        <img src="./assets/min/Episode 1.png" alt="Episodio 1" />
+        <h3>Capt 1: Gracias Toriyama eres el número 1</h3>
         <p>
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Velit ab
-          rerum a culpa, ullam accusamus cumque harum odit minima quae?
+          Recordando al maestro Akira Toriyama, lo que fue en vida, sus trabajos más notables y como nos marcó en
+          nuestras infancias.
         </p>
-        <a href="a">Escuchar capitulo <i class="fas fa-angle-double-right"></i></a>
+        <a href="escuchanos.html">Escuchar capitulo <i class="fas fa-angle-double-right"></i></a>
       </div>
       <div>
-        <img
-          src="https://www.mundodeportivo.com/alfabeta/hero/2021/02/dragon-ball-z-2.jpg?width=768&aspect_ratio=16:9&format=nowebp"
-          alt="News 2" />
+        <img src="./assets/min/Episode 2.png" alt="Episodio 2" />
         <h3>
-          Capt 2: Dragon Ball Z - "Y me pinte el cabello, me vesti de saya..."
+          Capt 2: Kokun chiquito"
         </h3>
         <p>
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Velit ab
-          rerum a culpa, ullam accusamus cumque harum odit minima quae?
+          Hablamos de nuestra infancia, la etapa de Goku niño la que lo inició todo, momentos y personajes favoritos, e
+          inspiraciones del maestro Toriyama
         </p>
-        <a href="a">Escuchar capitulo <i class="fas fa-angle-double-right"></i></a>
+        <a href="escuchanos.html">Escuchar capitulo <i class="fas fa-angle-double-right"></i></a>
       </div>
       <div>
-        <img
-          src="https://imgsrv.crunchyroll.com/cdn-cgi/image/fit=contain,format=auto,quality=85,width=1200,height=675/catalog/crunchyroll/5de444edf50cfe5dc4b8b9c93546c150.jpe"
-          alt="News 3" />
+        <img src="./assets/min/Episode 3.png" alt="Episodio 3" />
         <h3>
-          Capt 3: Dragon Ball GT - Que buena transformación... pero que
-          carajos?!
+          Capt 3: "7 Palabras E S E N C I A" Parte 1
         </h3>
         <p>
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Velit ab
-          rerum a culpa, ullam accusamus cumque harum odit minima quae?
+          Goku ha crecido y con él la historia de Dragon Ball volviéndose más madura y esencial. Comenzando con la Saga
+          Saiyajin y la Saga de Freezer
         </p>
-        <a href="a">Escuchar capitulo <i class="fas fa-angle-double-right"></i></a>
+        <a href="escuchanos.html">Escuchar capitulo <i class="fas fa-angle-double-right"></i></a>
       </div>
       <div>
-        <img src="https://i.blogs.es/99c03b/one-piece_0/1366_2000.jpeg" alt="News 4" />
+        <img src="./assets/min/Episode 4.png" alt="Episodio 4" />
         <h3>
-          Capt 4: One Piece - El tesoro eran los amigos que hicimos en el
-          camino
+          Capt 4: "7 Palabras E S E N C I A" Parte 2
         </h3>
         <p>
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Velit ab
-          rerum a culpa, ullam accusamus cumque harum odit minima quae?
+          Continuamos hablando de la esencia. Esta vez la Saga de Cell y la Saga de Majin Buu.
         </p>
-        <a href="a">Escuchar capitulo <i class="fas fa-angle-double-right"></i></a>
+        <a href="escuchanos.html">Escuchar capitulo <i class="fas fa-angle-double-right"></i></a>
+      </div>
+      <div>
+        <img src="./assets/min/Episode 5.png" alt="Episodio 5" />
+        <h3>
+          Capt 4: Kokun chiquito... Otra vez.
+        </h3>
+        <p>
+          La continuación no canon de Z, el debate si es buena o no, errores e ideas desaprovechadas.
+        </p>
+        <a href="escuchanos.html">Escuchar capitulo <i class="fas fa-angle-double-right"></i></a>
       </div>
     </div>
+    <div class="btn-more"><a class="btn" href="escuchanos.html">Mas capitulos <i class="fas fa-angle-double-right"></i></a></div>
 
     <section class="cards-banner-one">
       <div class="content">
@@ -140,59 +136,19 @@
             fugiat, tempora iure accusantium animi reiciendis maxime soluta nisi
             neque expedita?
           </p>
-          <a href="#" class="btn">Ver mas <i class="fas fa-angle-double-right"></i></a>
+          <!--<a href="#" class="btn">Ver mas <i class="fas fa-angle-double-right"></i></a>-->
         </div>
         <div class="video-section">
           <video class="video-intro" width="640" height="360" controls poster="./img/logo.png">
-            <source src="./img/Teaser.mp4" type="video/mp4">
+            <source src="./assets/vid/Teaser.mp4" type="video/mp4">
             Tu navegador no admite la etiqueta de video.
           </video>
         </div>
       </div>
     </section>
 
-    <!--
-    <!--News card 2
-    <div class="news-cards">
-      <div>
-        <img src="./img/news1.jpg" alt="News 1" />
-        <h3>Lorem, ipsum dolor.</h3>
-        <p>
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Velit ab
-          rerum a culpa, ullam accusamus cumque harum odit minima quae?
-        </p>
-        <a href="a">ver mas <i class="fas fa-angle-double-right"></i></a>
-      </div>
-      <div>
-        <img src="./img/news2.jpg" alt="News 2" />
-        <h3>Lorem, ipsum dolor.</h3>
-        <p>
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Velit ab
-          rerum a culpa, ullam accusamus cumque harum odit minima quae?
-        </p>
-        <a href="a">ver mas <i class="fas fa-angle-double-right"></i></a>
-      </div>
-      <div>
-        <img src="./img/news3.jpg" alt="News 3" />
-        <h3>Lorem, ipsum dolor.</h3>
-        <p>
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Velit ab
-          rerum a culpa, ullam accusamus cumque harum odit minima quae?
-        </p>
-        <a href="a">ver mas <i class="fas fa-angle-double-right"></i></a>
-      </div>
-      <div>
-        <img src="./img/news4.jpg" alt="News 4" />
-        <h3>Lorem, ipsum dolor.</h3>
-        <p>
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Velit ab
-          rerum a culpa, ullam accusamus cumque harum odit minima quae?
-        </p>
-        <a href="a">ver mas <i class="fas fa-angle-double-right"></i></a>
-      </div>
-    </div>
--->
     <hr>
+
     <section class="cards-banner-two">
       <div class="content">
         <div class="text-section">
@@ -201,7 +157,7 @@
             Puedes encontrar nuestros episodios en las principales plataformas de podcasts, para que puedas disfrutar de
             nuestro contenido en cualquier momento y lugar.
           </p>
-          <a href="#" class="btn">learn more <i class="fas fa-angle-double-right"></i></a>
+          <a href="conocenos.html" class="btn">learn more <i class="fas fa-angle-double-right"></i></a>
         </div>
         <div class="buttons-section">
           <a href="https://spotify.com" class="btn spotify-btn" target="_blank">Spotify</a>
