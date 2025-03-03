@@ -11,12 +11,16 @@
     text-align: center;
     justify-content: flex-end;
 }
-.banner h2,.banner p {
+
+.banner h2,
+.banner p {
     margin-bottom: 10px
 }
-.caja-banner{
+
+.caja-banner {
     background-color: #414141d2;
 }
+
 .btn {
     cursor: pointer;
     /*para que parezca un boton al hacer hover*/
@@ -31,14 +35,22 @@
     /*borde del boton*/
     margin: 10px 0;
 }
+
 .btn:hover {
     opacity: .7;
 }
-.btn-more{
+
+.btn-more {
     display: flex;
     align-items: center;
     justify-content: center;
+    margin: 25px 0;
 }
+
+.noCapts {
+    display: block;
+}
+
 .capitulos {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
@@ -46,14 +58,17 @@
     gap: 25px;
     margin: 10px 0;
 }
+
 .capitulos img {
     width: 100%;
     height: auto;
 }
+
 .capitulos h3 {
     font-size: 20px;
     margin: 10px 0;
 }
+
 .capitulos a {
     padding: 1px 0;
     color: #f2f2f2;
@@ -61,39 +76,101 @@
     display: inline-block;
     font-weight: bold;
 }
+
 .capitulos a:hover {
     border-bottom: 2px solid #fff;
 }
+
 .cards-banner-one {
-    background-color:  #414141d2;
+    background-color: #414141d2;
     display: flex;
     justify-content: center;
     align-items: center;
     padding: 20px;
 }
+
 .cards-banner-one .content {
     display: flex;
     justify-content: space-between;
     align-items: center;
     width: 100%;
-    max-width: 1200px;
+    max-width: 1000px;
     margin: 0 auto;
 }
-.cards-banner-one p,.cards-banner-one h2 {
+
+.cards-banner-one p,
+.cards-banner-one h2 {
     margin: 10px 0 20px 0;
 }
+
+.cards-banner-one .content,
+.cards-banner-two .content {
+    width: 80%;
+}
+
+.text-section {
+    flex: 1;
+    padding-right: 50px;
+}
+
+.video-section {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+}
+
+.video-intro {
+    max-width: 100%;
+    height: auto;
+}
+
+.cards-banner-two {
+    background-color: #6e6442;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+.cards-banner-two .content {
+    text-align: center;
+    display: grid;
+    justify-content: center;
+    /* justify-items: stretch; */
+    height: 80px;
+    width: 60%;
+    max-width: 1000px;
+    padding: 0;
+    margin: 0 0 10px 0;
+}
+
+.buttons-section {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0 0 0 0;
+}
+
+.youtube-btn {
+    background-color: rgb(189, 2, 2);
+}
+
 @media (max-width: 700px) {
     .capitulos {
         grid-template-columns: repeat(2, 1fr);
     }
+
     .capitulos img {
         height: auto;
     }
 }
+
 @media (max-width:500px) {
     .capitulos {
         grid-template-columns: 1fr;
     }
+
     .cards-banner-one .content,
     .cards-banner-two .content {
         width: 100%;
