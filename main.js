@@ -9,7 +9,7 @@ ScrollReveal().reveal('.cards-banner-one', { delay: 500 });
 
 // Import the Firebase libraries
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-app.js";
-import { getFirestore, collection, getDocs, query, orderBy } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-firestore.js";
+import { getFirestore, collection, where, doc, getDocs, query, orderBy } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-firestore.js";
 
 // Your Firebase configuration (replace with your actual config)
 const firebaseConfig = {
@@ -29,22 +29,53 @@ const db = getFirestore(app);
 
 
 const path = window.location.pathname;
-let resultContainer; // Declaración global en este ámbito
+// Obtener el parámetro "id" de la URL (si existe)
+const params = new URLSearchParams(window.location.search);
+const chapterId = params.get("id");
 
-if (path.includes("index.html") || path === "/") {
+let resultContainer;
+
+if (chapterId) {
+  resultContainer = document.querySelector('.chapter-detail');
+} else if (path.includes("index.html") || path === "/") {
   resultContainer = document.querySelector('.capitulos');
 } else if (path.includes("capitulos.html")) {
   resultContainer = document.querySelector('.allChapter');
 }
 
-// let resultContainer = document.querySelector('.capitulos');
+// Variables globales para paginación (usadas en "capitulos.html" sin parámetro "id")
+let allEpisodes = [];
+let currentPage = 1;
+const pageSize = 5;
+let prevButton, nextButton;
+
+if (chapterId) {
+  getIdEpisode().then((capitulo) => {
+    if (capitulo) {
+      displayIdEpisode(capitulo);
+    } else {
+      resultContainer.innerHTML = `<p>No se encontró el episodio con id ${chapterId}</p>`;
+    }
+  });
+} else {
+  getPodcastEpisodes().then((episodios) => {
+    if (path.includes("index.html") || path === "/") {
+      displayEpisodes(episodios.slice(0, 4));
+    } else if (path.includes("capitulos.html")) {
+      allEpisodes = episodios;
+      currentPage = 1;
+      displayEpisodesPage(currentPage);
+      createPaginationControls();
+
+      // displayEpisodes(episodios);
+    }
+  });
+}
 
 async function getPodcastEpisodes() {
   const episodesCollectionRef = collection(db, "episodios");
-  //   console.log(episodesCollectionRef)
-  // Asegúrate de que cada documento tenga un campo "id" (numérico)
   const q = query(episodesCollectionRef, orderBy("id", "desc"));
-  console.log(q);
+  // console.log(q);
 
   try {
     const querySnapshot = await getDocs(q);
@@ -67,139 +98,32 @@ async function getPodcastEpisodes() {
   }
 }
 
-
-getPodcastEpisodes().then((episodios) => {
-  if (path.includes("index.html") || path === "/") {
-    displayEpisodes(episodios.slice(0, 4));
-  } else if (path.includes("capitulos.html")) {
-    displayEpisodes(episodios);
+async function getIdEpisode() {
+  try {
+    const episodesCollectionRef = collection(db, "episodios");
+    // Convertimos chapterId a número si es necesario
+    const q = query(episodesCollectionRef, where("id", "==", Number(chapterId)));
+    const querySnapshot = await getDocs(q);
+    if (!querySnapshot.empty) {
+      // Retornamos el primer documento encontrado
+      return querySnapshot.docs[0].data();
+    } else {
+      console.error("No se encontró el capitulo #", chapterId);
+      return null;
+    }
+  } catch (error) {
+    console.error("Error fetching episode:", error);
+    return null;
   }
-});
-
-function displayEpisodes(episodios) {
-  resultContainer.innerHTML = '';
-
-  if (episodios.length === 0) {
-    let noEpisodeMessage = document.createElement('h4');
-    noEpisodeMessage.textContent = 'No se encontraron episodios. Verifica la conexión a la base de datos o las reglas de Firestore.';
-    resultContainer.appendChild(noEpisodeMessage);
-    return;
-  }
-
-  episodios.forEach(capitulo => {
-    let captDiv = document.createElement('div');
-    captDiv.classList.add('capt');
-
-    let poster = document.createElement('img');
-    poster.src = `https://drive.google.com/thumbnail?id=${capitulo.img}`;
-    poster.alt = `Póster de ${capitulo.nombre}`;
-
-    let title = document.createElement('h3');
-    title.textContent = `Ep. #${capitulo.id} / ${capitulo.nombre}`;
-
-    const maxPalabras = 20;
-    const palabras = capitulo.description.split(/\s+/); // Split por espacios
-    let description = document.createElement('p');
-    let botonCapt = document.createElement('a');
-
-    if (path.includes("index.html") || path === "/") {
-      if (palabras.length > maxPalabras ) {
-        description.textContent = palabras.slice(0, maxPalabras).join(' ') + ' ...';
-      } else if (path.includes("capitulos.html")) {
-        description.textContent = capitulo.description;
-      }
-      botonCapt.href = `capitulos.html?id=${capitulo.id}`;
-      botonCapt.innerHTML = 'Ver más <i class="fas fa-angle-double-right"></i>';
-    } else if (path.includes("capitulos.html")) {
-      description.textContent = capitulo.description;
-      botonCapt.href = capitulo.link;
-      botonCapt.innerHTML = 'Escucha el capitulo <i class="fas fa-angle-double-right"></i>';
-    };
-
-
-    // botonCapt.href = capitulo.link;
-
-
-    captDiv.appendChild(poster);
-    captDiv.appendChild(title);
-    captDiv.appendChild(description);
-    captDiv.appendChild(botonCapt);
-
-    resultContainer.appendChild(captDiv);
-  });
 }
-
-
-
-/* ------------------------- FIREBASE FUNCIONANDO ----------------------------------------*/
-
-// document.querySelector(".menu-btn").addEventListener("click", () => {
-//   document.querySelector(".nav-menu").classList.toggle("show");
-// })
-// ScrollReveal().reveal('.showcase');
-// ScrollReveal().reveal('.news-cards', { delay: 500 });
-// ScrollReveal().reveal('.cards-banner-one', { delay: 500 });
-// ScrollReveal().reveal('.cards-banner-one', { delay: 500 });
-
-// // Import the Firebase libraries
-// import { initializeApp } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-app.js";
-// import { getFirestore, collection, getDocs, query, orderBy } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-firestore.js";
-
-// // Your Firebase configuration (replace with your actual config)
-// const firebaseConfig = {
-//   apiKey: "AIzaSyC9zPkZFWqV3EReb2sycMbeSwsXon_gKrk",
-//   authDomain: "datos-de-prueba-a6396.firebaseapp.com",
-//   projectId: "datos-de-prueba-a6396",
-//   storageBucket: "datos-de-prueba-a6396.firebasestorage.app",
-//   messagingSenderId: "1057473109635",
-//   appId: "1:1057473109635:web:2a7a0e75418e382af705b6",
-//   measurementId: "G-SZTSRRW7RZ"
-// };
-
-// // Inicialización de Firebase y Firestore
-// const app = initializeApp(firebaseConfig);
-// const db = getFirestore(app);
-
-// let resultContainer = document.querySelector('.capitulos');
-
-// async function getPodcastEpisodes() {
-//   const episodesCollectionRef = collection(db, "episodios");
-//   //   console.log(episodesCollectionRef)
-//   // Asegúrate de que cada documento tenga un campo "id" (numérico)
-//   const q = query(episodesCollectionRef, orderBy("id", "desc"));
-//   console.log(q);
-
-//   try {
-//     const querySnapshot = await getDocs(q);
-//     const episodes = [];
-//     querySnapshot.forEach((doc) => {
-//       const data = doc.data();
-//       episodes.push({
-//         // Si deseas mostrar el campo numérico, úsalo desde data
-//         id: data.id,
-//         nombre: data.nombre,
-//         img: data.img,
-//         description: data.description,
-//         link: data.link,
-//       });
-//     });
-//     return episodes;
-//   } catch (error) {
-//     console.error("Error fetching episodes:", error);
-//     return [];
-//   }
-// }
-
-// getPodcastEpisodes().then((episodios) => {
-//   displayEpisodes(episodios.slice(0, 4));
-// });
 
 // function displayEpisodes(episodios) {
 //   resultContainer.innerHTML = '';
 
 //   if (episodios.length === 0) {
 //     let noEpisodeMessage = document.createElement('h4');
-//     noEpisodeMessage.textContent = 'No se encontraron episodios. Verifica la conexión a la base de datos o las reglas de Firestore.';
+//     resultContainer.classList.replace('capitulos', 'noCapt')
+//     noEpisodeMessage.textContent = 'Lo sentimos, nuestros capitulos fueron borrados por un problema en el multiverso, estamos buscando las esferas del dragon para recuperarlos';
 //     resultContainer.appendChild(noEpisodeMessage);
 //     return;
 //   }
@@ -208,106 +132,277 @@ function displayEpisodes(episodios) {
 //     let captDiv = document.createElement('div');
 //     captDiv.classList.add('capt');
 
-//     let poster = document.createElement('img');
-//     poster.src = `https://drive.google.com/thumbnail?id=${capitulo.img}`;
-//     poster.alt = `Póster de ${capitulo.nombre}`;
-
-//     let title = document.createElement('h3');
-//     title.textContent = `Ep. #${capitulo.id} / ${capitulo.nombre}`;
-
-
-
-
-
 //     const maxPalabras = 20;
 //     const palabras = capitulo.description.split(/\s+/); // Split por espacios
 
-//     let description = document.createElement('p');
+//     if (path.includes("index.html") || path === "/") {
+//       let poster = document.createElement('img');
+//       poster.src = `https://drive.google.com/thumbnail?id=${capitulo.img}`;
+//       poster.alt = `Póster de ${capitulo.nombre}`;
 
-//     if (palabras.length > maxPalabras) {
-//       description.textContent = palabras.slice(0, maxPalabras).join(' ') + ' ...';
-//     } else {
-//       description.textContent = capitulo.description;
+//       let title = document.createElement('h3');
+//       title.textContent = `Ep. #${capitulo.id} / ${capitulo.nombre}`;
+
+//       let description = document.createElement('p');
+//       if (palabras.length > maxPalabras) {
+//         description.textContent = palabras.slice(0, maxPalabras).join(' ') + ' ...';
+//       } else {
+//         description.textContent = capitulo.description;
+//       }
+
+//       let botonCapt = document.createElement('a');
+//       botonCapt.href = `capitulos.html?id=${capitulo.id}`;
+//       botonCapt.innerHTML = 'Ver más <i class="fas fa-angle-double-right"></i>';
+
+//       captDiv.append(poster, title, description, botonCapt);
+//       resultContainer.appendChild(captDiv);
 //     }
+//     else if (path.includes("capitulos.html")) {
+//       let infoDiv = document.createElement('div');
+//       infoDiv.classList.add('info');
 
-//     ;
+//       let poster = document.createElement('img');
+//       poster.src = `https://drive.google.com/thumbnail?id=${capitulo.img}`;
+//       poster.alt = `Póster de ${capitulo.nombre}`;
 
-//     let botonCapt = document.createElement('a');
-//     // botonCapt.href = capitulo.link;
-//     botonCapt.href = `capitulos.html?id=${capitulo.id}`;
-//     botonCapt.innerHTML = 'Ver más <i class="fas fa-angle-double-right"></i>';
+//       let title = document.createElement('h3');
+//       title.textContent = `Ep. #${capitulo.id} / ${capitulo.nombre}`;
 
-//     captDiv.appendChild(poster);
-//     captDiv.appendChild(title);
-//     captDiv.appendChild(description);
-//     captDiv.appendChild(botonCapt);
+//       let description = document.createElement('p');
+//       description.textContent = capitulo.description;
 
-//     resultContainer.appendChild(captDiv);
+//       let botonCapt = document.createElement('a');
+//       botonCapt.href = capitulo.link;
+//       // botonCapt.href = `capitulos.html?id=${capitulo.id}`;
+//       botonCapt.innerHTML = 'Escucha el capitulo  <i class="fas fa-angle-double-right"></i>';
+
+//       infoDiv.append(poster,title, description, botonCapt);
+//       captDiv.append(poster, infoDiv);
+//       resultContainer.appendChild(captDiv);
+//     }
 //   });
 // }
+function displayEpisodes(episodios) {
+  resultContainer.innerHTML = '';
 
+  if (episodios.length === 0) {
+    let noEpisodeMessage = document.createElement('h4');
+    resultContainer.classList.replace('capitulos', 'noCapt')
+    noEpisodeMessage.textContent = 'Lo sentimos, nuestros capitulos fueron borrados por un problema en el multiverso, estamos buscando las esferas del dragon para recuperarlos';
+    resultContainer.appendChild(noEpisodeMessage);
+    return;
+  }
 
+  episodios.forEach(capitulo => {
+    let captDiv = document.createElement('div');
+    captDiv.classList.add('capt');
 
+    const maxPalabras = 20;
+    const palabras = capitulo.description.split(/\s+/); // Split por espacios
 
+    let poster = document.createElement('img');
+    poster.src = `https://drive.google.com/thumbnail?id=${capitulo.img}`;
+    poster.alt = `Póster de ${capitulo.nombre}`;
 
+    let title = document.createElement('h3');
+    title.textContent = `Ep. #${capitulo.id}/ ${capitulo.nombre}`;
 
+    let description = document.createElement('p');
+    if (palabras.length > maxPalabras) {
+      description.textContent = palabras.slice(0, maxPalabras).join(' ') + ' ...';
+    } else {
+      description.textContent = capitulo.description;
+    }
 
+    let botonCapt = document.createElement('a');
+    botonCapt.href = `capitulos.html?id=${capitulo.id}`;
+    botonCapt.innerHTML = 'Ver más <i class="fas fa-angle-double-right"></i>';
 
+    captDiv.append(poster, title, description, botonCapt);
+    resultContainer.appendChild(captDiv);
+  });
+}
 
+function displayIdEpisode(capitulo) {
+  resultContainer.innerHTML = '';
 
+  let captDiv = document.createElement('div');
+  captDiv.classList.add('capts');
 
+  let poster = document.createElement('img');
+  poster.src = `https://drive.google.com/thumbnail?id=${capitulo.img}`;
+  poster.alt = `Póster de ${capitulo.nombre}`;
 
+  let title = document.createElement('h3');
+  title.textContent = `Ep. #${capitulo.id}/ ${capitulo.nombre}`;
 
-/* ------------------------- SIN FIREBASE ----------------------------------------*/
+  // const maxPalabras = 20;
+  // const palabras = capitulo.description.split(/\s+/); // Split por espacios
+  let description = document.createElement('p');
+  description.textContent = capitulo.description;
 
+  let botonCapt = document.createElement('a');
+  botonCapt.href = capitulo.link;
+  botonCapt.innerHTML = 'Escucha el capitulo <i class="fas fa-angle-double-right"></i>';
 
+  let botonCaptAll = document.createElement('a');
+  botonCaptAll.href = 'capitulos.html';
+  botonCaptAll.innerHTML = ' <i class="fas fa-angle-double-left"></i> Todos los episodios';
 
-// import { episodios } from './db.js'
-// let resultContainer = document.querySelector('.capitulos');
+  captDiv.appendChild(poster);
+  captDiv.appendChild(title);
+  captDiv.appendChild(description);
 
-// function displayEpisodes(episodios) {
-//     resultContainer.innerHTML = '';
+  let botDiv = document.createElement('div');
+  botDiv.classList.add('botDiv');
 
-//     if (episodios.length === 0) {
-//         let noEpisodeMessage = document.createElement('h4');
-//         noEpisodeMessage.textContent = 'Lo sentimos, nuestros capitulos fueron borrados por un problema en el multiverso, estamos buscando las esferas del dragon para recuperarlos';
-//         resultContainer.appendChild(noEpisodeMessage);
-//         return;
+  botDiv.appendChild(botonCaptAll);
+  botDiv.appendChild(botonCapt);
+
+  captDiv.appendChild(botDiv);
+
+  resultContainer.appendChild(captDiv);
+}
+
+function displayEpisodesPage(page) {
+  resultContainer.innerHTML = '';
+  const startIndex = (page - 1) * pageSize;
+  const pageEpisodes = allEpisodes.slice(startIndex, startIndex + pageSize);
+
+  if (pageEpisodes.length === 0) {
+    resultContainer.innerHTML = `<h4>No hay episodios para mostrar.</h4>`;
+    return;
+  }
+
+  pageEpisodes.forEach(capitulo => {
+    let captDiv = document.createElement('div');
+    captDiv.classList.add('capt');
+
+    // Para la vista en capitulos.html, se muestra la info completa
+    let infoDiv = document.createElement('div');
+    infoDiv.classList.add('info');
+
+    let poster = document.createElement('img');
+    poster.src = `https://drive.google.com/thumbnail?id=${capitulo.img}`;
+    poster.alt = `Póster de ${capitulo.nombre}`;
+
+    let title = document.createElement('h3');
+    title.textContent = `Ep. #${capitulo.id} / ${capitulo.nombre}`;
+
+    let description = document.createElement('p');
+    description.textContent = capitulo.description;
+
+    let botonCapt = document.createElement('a');
+    botonCapt.href = capitulo.link;
+    botonCapt.innerHTML = 'Escucha el capítulo <i class="fas fa-angle-double-right"></i>';
+
+    infoDiv.append(title, description, botonCapt);
+    // Dependiendo del diseño, se pueden colocar la imagen e info en distintas posiciones.
+    // Por ejemplo, se puede hacer:
+    captDiv.append(poster, infoDiv);
+    resultContainer.appendChild(captDiv);
+  });
+}
+// // Función para crear y actualizar controles de paginación en capitulos.html
+// function createPaginationControls() {
+//   let paginationDiv = document.createElement('div');
+//   paginationDiv.id = "pagination";
+//   paginationDiv.style.textAlign = "center";
+//   paginationDiv.style.marginTop = "20px";
+
+//   let prevButton = document.createElement('button');
+//   prevButton.textContent = "Anterior";
+//   prevButton.addEventListener('click', () => {
+//     if (currentPage > 1) {
+//       currentPage--;
+//       displayEpisodesPage(currentPage);
+//       updatePaginationControls();
 //     }
+//   });
 
-//     episodios.forEach(capitulo => {
-//         let captDiv = document.createElement('div');
-//         captDiv.classList.add('capt');
+//   let nextButton = document.createElement('button');
+//   nextButton.textContent = "Siguiente";
+//   nextButton.addEventListener('click', () => {
+//     if (currentPage < Math.ceil(allEpisodes.length / pageSize)) {
+//       currentPage++;
+//       displayEpisodesPage(currentPage);
+//       updatePaginationControls();
+//     }
+//   });
 
-//         // Imagen del póster
-//         let poster = document.createElement('img');
-//         poster.src = `https://drive.google.com/thumbnail?id=${capitulo.img}`;
-//         // poster.src = capitulo.img;
-//         poster.alt = `Póster de ${capitulo.nombre}`;
+//   let pageInfo = document.createElement('span');
+//   pageInfo.id = "pageInfo";
+//   pageInfo.style.marginLeft = "10px";
+//   pageInfo.textContent = ` Página ${currentPage} de ${Math.ceil(allEpisodes.length / pageSize)}`;
 
-//         // Título del capitulo
-//         let title = document.createElement('h3');
-//         title.textContent = `Ep. #${capitulo.id}/ ${capitulo.nombre}`;
-
-//         // Descripción
-//         let description = document.createElement('p');
-//         description.textContent = capitulo.description;
-
-//         // Descripción
-//         let botonCapt = document.createElement('a');
-//         botonCapt.href = capitulo.link;
-//         botonCapt.innerHTML = 'Ver mas <i class="fas fa-angle-double-right"></i>';
-
-//         // Añadir elementos al contenedor
-//         captDiv.appendChild(poster);
-//         captDiv.appendChild(title);
-//         captDiv.appendChild(description);
-//         captDiv.appendChild(botonCapt);
-
-//         resultContainer.appendChild(captDiv);
-//     });
+//   paginationDiv.append(prevButton, nextButton, pageInfo);
+//   // Insertar el contenedor de paginación justo después del resultContainer
+//   resultContainer.parentNode.insertBefore(paginationDiv, resultContainer.nextSibling);
 // }
 
-// // Ordenar de mayor a menor ID (para obtener las más recientes)
-// const episodiosOrdenadas = episodios.sort((a, b) => b.id - a.id);
-// displayEpisodes(episodiosOrdenadas.slice(0, 4)); // Primeros 4 después de ordenar
+// function updatePaginationControls() {
+//   let pageInfo = document.getElementById('pageInfo');
+//   if (pageInfo) {
+//     pageInfo.textContent = ` Página ${currentPage} de ${Math.ceil(allEpisodes.length / pageSize)}`;
+//   }
+// }
+function createPaginationControls() {
+  let paginationDiv = document.createElement('div');
+  paginationDiv.id = "pagination";
+  paginationDiv.style.textAlign = "center";
+  paginationDiv.style.marginTop = "20px";
+
+  // Creamos los botones y los asignamos a las variables globales
+  prevButton = document.createElement('button');
+  prevButton.textContent = "Anterior";
+  prevButton.addEventListener('click', () => {
+    if (currentPage > 1) {
+      currentPage--;
+      displayEpisodesPage(currentPage);
+      updatePaginationControls();
+    }
+  });
+
+  nextButton = document.createElement('button');
+  nextButton.textContent = 'Siguiente';
+  nextButton.addEventListener('click', () => {
+    if (currentPage < Math.ceil(allEpisodes.length / pageSize)) {
+      currentPage++;
+      displayEpisodesPage(currentPage);
+      updatePaginationControls();
+    }
+  });
+
+  let pageInfo = document.createElement('span');
+  pageInfo.id = "pageInfo";
+  pageInfo.style.marginLeft = "10px";
+  pageInfo.textContent = `${currentPage} de ${Math.ceil(allEpisodes.length / pageSize)}`;
+  // pageInfo.textContent = ` Página ${currentPage} de ${Math.ceil(allEpisodes.length / pageSize)}`;
+
+  paginationDiv.append(prevButton, nextButton, pageInfo);
+  // Insertar el contenedor de paginación justo después del resultContainer
+  resultContainer.parentNode.insertBefore(paginationDiv, resultContainer.nextSibling);
+
+  updatePaginationControls();
+}
+
+function updatePaginationControls() {
+  let pageInfo = document.getElementById('pageInfo');
+  let totalPages = Math.ceil(allEpisodes.length / pageSize);
+  if (pageInfo) {
+    pageInfo.textContent = `${currentPage} de ${totalPages}`;
+    // pageInfo.textContent = ` Página ${currentPage} de ${totalPages}`;
+  }
+  // Ocultar el botón "Anterior" si estamos en la primera página
+  if (currentPage === 1) {
+    prevButton.style.display = "none";
+  } else {
+    prevButton.style.display = "inline-block";
+  }
+  // Ocultar el botón "Siguiente" si estamos en la última página
+  if (currentPage === totalPages) {
+    nextButton.style.display = "none";
+  } else {
+    nextButton.style.display = "inline-block";
+  }
+}
