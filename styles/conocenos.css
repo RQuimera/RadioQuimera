@@ -165,3 +165,19 @@ justify-content: center;
 .capt .info a:hover {
     background-color: #521e1e;
 }
+
+.itsASecret{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+.itsASecret img{
+    margin: 20px;
+    max-width: 300px;
+    width: 40%;
+}
+
+.infoCont a{
+    cursor:alias;
+}
