@@ -318,18 +318,18 @@ function displaySecrets() {
   let poster = document.createElement('img');
   poster.classList.add('secretImg');
 
-  if (chapterId  === 'c1') {
+if (chapterId  === 'c1') {
     title.textContent = `Yohohohohohou, vienes a tomar una taza de té con nosotros?`;
-    poster.src = 'https://64.media.tumblr.com/0619e457fd122e3033e1887d23e9e695/404b197327442998-f9/s1280x1920/f9f8dd9e31f9cbe980aa48c8527bddd47e01312d.jpg';
-    poster.alt = `Gato con botas`;
+    poster.src = 'https://live.staticflickr.com/65535/54375941490_0c8414f018_b.jpg';
+    poster.alt = `hora de té con Brook`;
   } else if (chapterId === 'j1') {
     title.textContent = `que haces aquí? Es peligroso que vayas solo por ahi, toma este kuriboh para que te acompañe`;
-    poster.src = 'https://live.staticflickr.com/65535/54371249032_3943105ff3_b.jpg';
+    poster.src = 'https://live.staticflickr.com/65535/54375751344_f685c23a97.jpg';
     poster.alt = `Kuriboh`;
   } else if (chapterId === 'p1') {
-    title.textContent = `Zoro? como llegaste aquí? te perdiste de nuevo?`;
-    poster.src = 'https://i.blogs.es/54f024/zoro/1366_2000.jpeg';
-    poster.alt = `zoro?`;
+    title.textContent = `ZzZz....eh! No es lo que crees...quieres que te la preste?`;
+    poster.src = 'https://live.staticflickr.com/65535/54376207444_6b4e53b191.jpg';
+    poster.alt = `El Roshi`;
   } 
 
   secretDiv.appendChild(poster);
